@@ -10,7 +10,14 @@
 #define kDefaultLineColor [UIColor colorWithRed:225.0/255.0 green:225.0/255.0 blue:225.0/255.0 alpha:1.0]
 #define kDefaultFillLineColor [UIColor colorWithRed:0.0/255.0 green:190.0/255.0 blue:90.0/255.0 alpha:1.0]
 
+//进度条距离外部边缘的距离
 #define kCompassSpace 40
+
+//开始弧度
+#define kStartAngle (-M_PI_2)
+
+//结束弧度
+#define kEndAngle (2*M_PI - M_PI_2)
 
 #import "DLCircleProgessView.h"
 
@@ -100,10 +107,13 @@
     
     CGContextSetLineDash(context, 0, lenghts, sizeof(lenghts)/sizeof(lenghts[0]));
     
-    CGContextAddArc(context, self.frame.size.width/2, self.frame.size.height/2, MIN(self.frame.size.width, self.frame.size.height)/2 - kCompassSpace - self.lineWidth/2, -M_PI_2, 2*M_PI - M_PI_2, NO);
+    CGContextAddArc(context, self.frame.size.width/2, self.frame.size.height/2, MIN(self.frame.size.width, self.frame.size.height)/2 - kCompassSpace - self.lineWidth/2, kStartAngle, kEndAngle, NO);
     
     CGContextStrokePath(context);
     
+    /**
+     *  画外形圆圈
+     */
     CGContextSetLineWidth(context, 3);
     CGContextSetLineDash(context, 0, NULL, 0);
     CGContextSetStrokeColorWithColor(context, self.fillLineColor.CGColor);
@@ -114,22 +124,27 @@
     
     self.progessLabel.text = [NSString stringWithFormat:@"%0.1f%%",progess*100];
     
+    
+    /**
+     *  画进度条
+     */
+    CGContextSetLineWidth(context, self.lineWidth);
+
     if (self.value <= self.maximumValue)
     {
         CGFloat endArc = M_PI  * 2 * progess;
         
-        CGContextSetLineWidth(context, self.lineWidth);
         CGContextSetLineDash(context, 0, lenghts, sizeof(lenghts)/sizeof(lenghts[0]));
-        CGContextAddArc(context, self.frame.size.width/2, self.frame.size.height/2, MIN(self.frame.size.width, self.frame.size.height)/2 - kCompassSpace - self.lineWidth/2, -M_PI_2, -M_PI_2 + endArc, NO);
-        CGContextStrokePath(context);
+        CGContextAddArc(context, self.frame.size.width/2, self.frame.size.height/2, MIN(self.frame.size.width, self.frame.size.height)/2 - kCompassSpace - self.lineWidth/2, kStartAngle, -M_PI_2 + endArc, NO);
     }
     else
     {
-        CGContextSetLineWidth(context, self.lineWidth);
         CGContextSetLineDash(context, 0, lenghts, sizeof(lenghts)/sizeof(lenghts[0]));
-        CGContextAddArc(context, self.frame.size.width/2, self.frame.size.height/2, MIN(self.frame.size.width, self.frame.size.height)/2 - kCompassSpace - self.lineWidth/2, -M_PI_2, 2*M_PI - M_PI_2, NO);
-        CGContextStrokePath(context);
+        CGContextAddArc(context, self.frame.size.width/2, self.frame.size.height/2, MIN(self.frame.size.width, self.frame.size.height)/2 - kCompassSpace - self.lineWidth/2, kStartAngle, kEndAngle, NO);
     }
+    
+    CGContextStrokePath(context);
+
     
 }
 
