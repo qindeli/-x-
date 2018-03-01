@@ -2,8 +2,7 @@
 ![](https://github.com/qindeli/DLCircleProgessView/raw/master/截图.png)
 
 
-<br>
- * 初始化
+* 初始化
 ```
 DLCircleProgessView *circleProgessView = [[DLCircleProgessView alloc] initWithFrame:CGRectMake(30, 60, 300, 300)];
 ```
